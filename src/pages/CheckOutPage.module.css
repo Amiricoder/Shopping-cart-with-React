@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 10px;
+  min-height: 1000px;
+}
+
+.products {
+  width: 100%;
+}
+
+
+
+.Tb{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 500px;
+}
+
+.Tb svg{
+  font-size: 40rem;
+  color: gray;
+}
