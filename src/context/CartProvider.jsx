@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useReducer } from "react";
+import React, { createContext, useContext, useEffect, useReducer } from "react";
 import { sumProducts } from "../helper/helper";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 
 const initialState = {
   //   دیتا هایی که درون سبد خرید میخوایم وجود داشته باشه
@@ -23,7 +24,7 @@ const reducer = (state, action) => {
 
     case "REMOVE_ITEM":
       const newSelectedItems = state.selectedItems.filter(
-        (item) => item.id !== action.payload.id
+        (item) => item.id !== action.payload.id,
       );
       return {
         ...state,
@@ -33,7 +34,7 @@ const reducer = (state, action) => {
 
     case "INCREASE":
       const increaseIndex = state.selectedItems.findIndex(
-        (item) => item.id === action.payload.id
+        (item) => item.id === action.payload.id,
       );
       state.selectedItems[increaseIndex].quantity++;
       return {
@@ -42,7 +43,7 @@ const reducer = (state, action) => {
       };
     case "DECREAS":
       const decreaseIndex = state.selectedItems.findIndex(
-        (item) => item.id === action.payload.id
+        (item) => item.id === action.payload.id,
       );
       state.selectedItems[decreaseIndex].quantity--;
       return {
@@ -63,7 +64,12 @@ const reducer = (state, action) => {
 const CartContext = createContext();
 
 function CartProvider({ children }) {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [storedState, setStoredState] = useLocalStorage("Cart", initialState);
+  const [state, dispatch] = useReducer(reducer, storedState);
+
+  useEffect(() => {
+    setStoredState(state);
+  }, [state]);
 
   return (
     <CartContext.Provider value={{ state: state, dispatch: dispatch }}>
